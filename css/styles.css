@@ -9,6 +9,7 @@
   --light: #f4f4fd;
   --white: #ffffff;
   --customers-icon: #afb1b8;
+  --main-transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html {
@@ -48,7 +49,8 @@ img {
 .link,
 .logo,
 .button,
-.services {
+.services,
+.overlay-text {
   color: inherit;
   font-family: inherit;
   font-size: inherit;
@@ -59,7 +61,26 @@ img {
 
 .link:hover,
 .link:focus {
-  color: var(--primary-brand);
+  transition: color var(--main-transition);
+
+  color: var(--hover-blue);
+}
+.link-fixed {
+  color: var(--hover-blue);
+}
+
+.link-fixed::after {
+  content: "";
+
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  display: block;
+  width: 100%;
+  height: 4px;
+  background-color: var(--primary-brand);
+  border-radius: 2px;
 }
 
 .list {
@@ -76,6 +97,8 @@ img {
   align-items: center;
 }
 .nav-link {
+  position: relative;
+
   display: inline-block;
   padding-top: 24px;
   padding-bottom: 24px;
@@ -88,11 +111,17 @@ img {
 .nav-contacts {
   display: inline-block;
 }
+
 .nav-contacts:not(:last-child) {
   margin-right: 40px;
 }
+
 .list-contacts {
   margin-left: auto;
+}
+
+.nav-link {
+  font-weight: 400;
 }
 
 .nav-logo,
@@ -156,6 +185,8 @@ img {
 }
 .button:hover,
 .button:focus {
+  transition: background-color var(--main-transition);
+
   background-color: var(--hover-blue);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 }
@@ -295,6 +326,8 @@ img {
 }
 .team-link:hover,
 .team-link:focus {
+  transition: background-color var(--main-transition);
+
   background-color: var(--hover-blue);
 }
 .team-icon-svg {
@@ -322,6 +355,8 @@ img {
 
 .customers-link:hover,
 .customers-link:focus {
+  transition: border var(--main-transition), fill var(--main-transition);
+
   border: 1px solid var(--primary-brand);
   fill: var(--primary-brand);
 }
@@ -385,6 +420,8 @@ img {
 
 .footer-icon:hover,
 .footer-icon:focus {
+  transition: background-color var(--main-transition);
+
   background-color: var(--success);
 }
 
@@ -409,6 +446,9 @@ img {
 }
 .buttons:hover,
 .buttons:focus {
+  transition: background-color var(--main-transition),
+    color var(--main-transition);
+
   background-color: var(--primary-brand);
   border: 1px solid transparent;
   color: var(--white);
@@ -423,6 +463,8 @@ img {
 }
 .filtr-btn:hover,
 .filtr-btn:focus {
+  transition: box-shadow var(--main-transition);
+
   box-shadow: 0px 3px 1px rgba(0, 0, 0, 0.1), 0px 2px 1px rgba(0, 0, 0, 0.08),
     0px 2px 2px rgba(0, 0, 0, 0.12);
 }
@@ -430,6 +472,8 @@ img {
   margin-right: 24px;
 }
 .filtr-card {
+  position: relative;
+
   display: flex;
   flex-wrap: wrap;
 }
@@ -441,6 +485,8 @@ img {
 }
 .filtr-list:hover,
 .filtr-list:focus {
+  transition: box-shadow var(--main-transition);
+
   box-shadow: 0px 1px 6px rgba(46, 47, 66, 0.08);
 }
 .filtr-list:nth-child(3n) {
@@ -449,10 +495,37 @@ img {
 .filtr-list:nth-last-child(-n + 3) {
   margin-bottom: 0;
 }
+.filtr-item {
+  overflow: hidden;
+  position: relative;
+}
+.filtr-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  background-color: var(--primary-brand);
+  transform: translateY(100%);
+  transition: transform var(--main-transition);
+}
+.filtr-list:hover .filtr-overlay {
+  transform: translateY(0);
+}
+.overlay-text {
+  padding: 40px 32px 164px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--light);
+}
 
 .filtr-text {
   padding: 32px 16px;
 }
+
+/* ---------  MODAL ----- */
+
 .backdrop {
   position: fixed;
   top: 0;
@@ -462,19 +535,27 @@ img {
   height: 100%;
 
   background-color: rgba(46, 47, 66, 0.4);
+
+  opacity: 1;
+  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 .backdrop.is-hidden {
   opacity: 0;
   pointer-events: none;
 }
+.backdrop.is-hidden .modal {
+  transform: translate(-50%, -50%) scale(1.1);
+}
 .modal {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
 
-  min-width: 408px;
-  min-height: 576px;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  width: 408px;
+  height: 576px;
   padding: 24px;
 
   background-color: #fff;
@@ -484,13 +565,25 @@ img {
   justify-content: center;
   align-items: center;
 
-  margin-left: 360px;
+  margin-left: auto;
 
-  background: #e7e9fc;
+  width: 24px;
+  height: 24px;
+
+  background: var(--accent);
   border: 1px solid rgba(0, 0, 0, 0.1);
-  fill: 00000;
+  fill: black;
   border-radius: 50%;
-  padding: 8px;
+  cursor: pointer;
+}
+.modal-button:hover,
+.modal-button:focus {
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    fill 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  background-color: var(--primary-brand);
+  fill: var(--white);
+  border: 1px solid transparent;
 }
 
 .secret-name {
