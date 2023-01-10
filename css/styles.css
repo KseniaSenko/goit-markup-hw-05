@@ -59,10 +59,12 @@ img {
   cursor: pointer;
 }
 
+.link {
+  transition: color var(--main-transition);
+}
+
 .link:hover,
 .link:focus {
-  transition: color var(--main-transition);
-
   color: var(--hover-blue);
 }
 .link-fixed {
