@@ -515,7 +515,8 @@ img {
   transform: translateY(100%);
   transition: transform var(--main-transition);
 }
-.filtr-list:hover .filtr-overlay {
+.services:hover .filtr-overlay,
+.services:focus .filtr-overlay {
   transform: translateY(0);
 }
 .overlay-text {
